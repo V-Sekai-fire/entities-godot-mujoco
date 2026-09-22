@@ -1,0 +1,31 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["a5669710921ee4bd.olean"],
+  "m": false,
+  "i": "b827999337449358.ilean",
+  "c": "1bc4d0f4c217f2b4.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\.lake\\build\\lib\\lean c:\\Users\\ernest.lee\\scoop\\persist\\elan\\.elan\\toolchains\\leanprover--lean4---v4.34.0\\bin\\lean.exe C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\PhysicsBridge.lean -o C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\.lake\\build\\lib\\lean\\PhysicsBridge.olean -i C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\.lake\\build\\lib\\lean\\PhysicsBridge.ilean -c C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\.lake\\build\\ir\\PhysicsBridge.c --setup C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\.lake\\build\\ir\\PhysicsBridge.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["physicsbridge/PhysicsBridge:extraDep",
+     [["@physicsbridge:extraDep", "00000000000006bb"]]],
+    ["imports", "00000000000006bb"]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.34.0, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b",
+   "a1c6c7aa3e9abfe7"],
+  ["C:\\Users\\ernest.lee\\AppData\\Local\\Temp\\claude\\C--contract-manifest\\83149ee5-19ab-4b2f-a541-4b8bdea447b7\\scratchpad\\egm\\model\\PhysicsBridge.lean",
+   "d17b92dc24ffc3e9"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: PhysicsBridge", "c6cff7f4715f8b3f"],
+  ["Package.id?: (some physicsbridge)", "d8fd415fdb559ae9"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "c160f8329e9b8081"}

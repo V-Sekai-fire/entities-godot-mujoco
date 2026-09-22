@@ -43,6 +43,9 @@ void MuJoCoPhysicsServer::_init() {
 		spec->option.gravity[2] = 0.0;
 	}
 	direct_state = memnew(MuJoCoDirectBodyState3D);
+	// Falsifiable marker: if this line is absent from the log, the active 3D
+	// physics server is NOT this one (e.g. Godot Physics or Jolt).
+	UtilityFunctions::print(String("MuJoCoPhysicsServer active | MuJoCo ") + mj_versionString());
 }
 
 void MuJoCoPhysicsServer::_finish() {
@@ -71,12 +74,18 @@ void MuJoCoPhysicsServer::recompile_if_dirty() {
 }
 
 void MuJoCoPhysicsServer::_step(float p_step) {
-	(void)p_step;
 	recompile_if_dirty();
 	if (!(model && data && bridge.step_allowed())) {
 		return;
 	}
-	mj_step(model, data);
+	int n = 1;
+	if (model->opt.timestep > 0.0) {
+		n = (int)(p_step / model->opt.timestep + 0.5);
+		if (n < 1) n = 1;
+	}
+	for (int i = 0; i < n; i++) {
+		mj_step(model, data);
+	}
 	// Hand each body's simulated state back so its node follows.
 	for (auto &kv : sync_callbacks) {
 		const int id = body_mjid(kv.first);

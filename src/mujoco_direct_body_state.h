@@ -3,6 +3,7 @@
 #define MUJOCO_DIRECT_BODY_STATE_H
 
 #include <godot_cpp/classes/physics_direct_body_state3d_extension.hpp>
+#include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include <godot_cpp/variant/rid.hpp>
 
 #include <mujoco/mujoco.h>
@@ -68,6 +69,8 @@ public:
 	// --- sleep ---
 	void _set_sleep_state(bool p_enabled) override {}
 	bool _is_sleeping() const override { return false; }
+	uint32_t _get_collision_layer() const override { return 1; }
+	uint32_t _get_collision_mask() const override { return 1; }
 
 	// --- contacts (not reported yet) ---
 	int32_t _get_contact_count() const override { return 0; }

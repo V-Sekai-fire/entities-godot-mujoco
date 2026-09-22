@@ -28,6 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
+#include <cstdlib>
 #include <godot_cpp/godot.hpp>
 
 #include <godot_cpp/classes/editor_plugin_registration.hpp>

@@ -8,7 +8,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # godot-cpp comes from this repository's own manifest (default.xml), placed under
 # thirdparty/. See that file for why it is a manifest entry and not a submodule.
-set(GODOT_CPP_DIR "${CMAKE_SOURCE_DIR}/thirdparty/godot-cpp" CACHE PATH "godot-cpp checkout")
+set(GODOT_CPP_DIR "${CMAKE_SOURCE_DIR}/third_party/godot-cpp" CACHE PATH "godot-cpp checkout")
 if(NOT EXISTS "${GODOT_CPP_DIR}/CMakeLists.txt")
   message(FATAL_ERROR
     "missing godot-cpp at ${GODOT_CPP_DIR}. From the repository root:\n"

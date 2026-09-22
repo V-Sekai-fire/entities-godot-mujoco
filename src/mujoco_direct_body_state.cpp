@@ -33,6 +33,13 @@ Vector3 MuJoCoDirectBodyState3D::_get_angular_velocity() const {
 	return Vector3(vel[0], vel[1], vel[2]);
 }
 
+Vector3 MuJoCoDirectBodyState3D::_get_velocity_at_local_position(const Vector3 &p_local_position) const {
+	// v + w x r, in the world frame.
+	const Vector3 v = _get_linear_velocity();
+	const Vector3 w = _get_angular_velocity();
+	return v + w.cross(p_local_position);
+}
+
 Vector3 MuJoCoDirectBodyState3D::_get_total_gravity() const {
 	if (model == nullptr) {
 		return Vector3(0, -9.81, 0);
@@ -41,8 +48,20 @@ Vector3 MuJoCoDirectBodyState3D::_get_total_gravity() const {
 	return Vector3(g[0], g[1], g[2]);
 }
 
-float MuJoCoDirectBodyState3D::_get_step() const {
-	return model ? (float)model->opt.timestep : 0.0f;
+Vector3 MuJoCoDirectBodyState3D::_get_center_of_mass() const {
+	if (data == nullptr || body_id < 0) {
+		return Vector3();
+	}
+	const double *c = data->xipos + body_id * 3; // world inertial-frame position
+	return Vector3(c[0], c[1], c[2]);
+}
+
+Vector3 MuJoCoDirectBodyState3D::_get_center_of_mass_local() const {
+	if (model == nullptr || body_id < 0) {
+		return Vector3();
+	}
+	const double *c = model->body_ipos + body_id * 3;
+	return Vector3(c[0], c[1], c[2]);
 }
 
 float MuJoCoDirectBodyState3D::_get_inverse_mass() const {
@@ -53,5 +72,19 @@ float MuJoCoDirectBodyState3D::_get_inverse_mass() const {
 	return m > 0.0 ? (float)(1.0 / m) : 0.0f;
 }
 
-// MuJoCo integrates in mj_step, so forces are already applied.
-void MuJoCoDirectBodyState3D::_integrate_forces() {}
+Vector3 MuJoCoDirectBodyState3D::_get_inverse_inertia() const {
+	if (model == nullptr || body_id < 0) {
+		return Vector3();
+	}
+	const double *I = model->body_inertia + body_id * 3;
+	return Vector3(I[0] > 0 ? 1.0 / I[0] : 0.0, I[1] > 0 ? 1.0 / I[1] : 0.0, I[2] > 0 ? 1.0 / I[2] : 0.0);
+}
+
+Basis MuJoCoDirectBodyState3D::_get_inverse_inertia_tensor() const {
+	const Vector3 inv = _get_inverse_inertia();
+	return Basis(Vector3(inv.x, 0, 0), Vector3(0, inv.y, 0), Vector3(0, 0, inv.z));
+}
+
+float MuJoCoDirectBodyState3D::_get_step() const {
+	return model ? (float)model->opt.timestep : 0.0f;
+}

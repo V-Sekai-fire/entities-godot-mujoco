@@ -1,0 +1,37 @@
+name: build
+
+# One-step build: godot-cpp and MuJoCo are in-repo subtrees, so a checkout plus
+# scripts/build.sh produces the extension. Bindings are generated against the
+# Godot 4.7.2 API vendored in third_party/godot-cpp/gdextension.
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  name: linux }
+          - { os: windows-latest, name: windows }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools (Linux)
+        if: matrix.name == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build clang
+
+      - name: Set up MSVC (Windows)
+        if: matrix.name == 'windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build
+        shell: bash
+        run: bash scripts/build.sh -G Ninja
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mujoco-extension-${{ matrix.name }}
+          path: demo/addons/mujoco/bin/*

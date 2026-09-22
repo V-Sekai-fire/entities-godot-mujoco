@@ -1,9 +1,3 @@
 /build/
-/model/.lake/
-/model/build/
-thirdparty/
-__pycache__/
-*.pyc
+.godot/
 *.exe
-demo/addons/mujoco/bin/*.dll
-demo/addons/mujoco/bin/*.so
