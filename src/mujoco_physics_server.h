@@ -3,41 +3,47 @@
 #define MUJOCO_PHYSICS_SERVER_H
 
 #include <godot_cpp/classes/physics_server3d_extension.hpp>
-#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/rid.hpp>
+
+#include <mujoco/mujoco.h>
+
+#include <cstdint>
+#include <unordered_map>
 
 #include "mujoco_bridge.h"
 
 namespace godot {
 
-// A Godot 3D physics server backed by MuJoCo running in the godot-sandbox guest.
+// A Godot 3D physics server backed by MuJoCo linked natively into this extension.
 //
-// The class holds the proven bridge (mujoco_bridge::Bridge): create/free move it
-// to `dirty`, and a step is forwarded to the guest only when it is `compiled`,
-// which is exactly what model/PhysicsBridge.lean proves keeps a stale model from
-// being stepped and keeps RID <-> index from aliasing.
+// Migrated from delegating to a RISC-V godot-sandbox guest to calling MuJoCo
+// directly. The impedance mismatch is unchanged and still proved in
+// model/PhysicsBridge.lean: Godot builds the world incrementally while MuJoCo
+// compiles it whole, so create/add calls accumulate into an mjSpec, the model is
+// compiled before it steps, and any topology change forces a recompile. The
+// proven bridge (mujoco_bridge::Bridge) enforces that ordering here.
 //
-// The heavy lifting still to land: turning the buffered create/add calls into an
-// MJCF (or mjSpec) description the guest compiles, and marshalling body and
-// flex-vertex state back across the sandbox boundary via the Sandbox vmcalls
-// (mjc_load_xml, mjc_step, mjc_bodies, mjc_flexverts). The ~150-method
-// PhysicsServer3DExtension surface is declared incrementally as each is wired.
+// Native MuJoCo is fast but not bit-identical across CPUs; the cross-host
+// determinism story lives in the sandbox demos, not in this backend.
 class MuJoCoPhysicsServer : public PhysicsServer3DExtension {
 	GDCLASS(MuJoCoPhysicsServer, PhysicsServer3DExtension)
 
 	mujoco_bridge::Bridge bridge;
-	Object *sandbox = nullptr; // the godot-sandbox Sandbox instance running mujoco.elf
+	mjSpec *spec = nullptr;
+	mjModel *model = nullptr;
+	mjData *data = nullptr;
+	std::unordered_map<uint64_t, mjsBody *> spec_bodies; // rid -> spec body
 	bool flushing = false;
-	bool model_dirty = true;
+
+	void recompile_if_dirty();
 
 protected:
 	static void _bind_methods() {}
 
 public:
-	// The creator PhysicsServer3DManager calls when the project selects "MuJoCo".
 	static PhysicsServer3D *create();
 
-	// --- lifecycle / stepping (the proven guard lives here) ---
+	// --- lifecycle / stepping ---
 	virtual void _init() override;
 	virtual void _finish() override;
 	virtual void _set_active(bool p_active) override;
@@ -52,7 +58,7 @@ public:
 	virtual void _space_set_active(const RID &p_space, bool p_active) override;
 	virtual bool _space_is_active(const RID &p_space) const override;
 
-	// --- rigid bodies (crowd) ---
+	// --- rigid bodies ---
 	virtual RID _body_create() override;
 	virtual void _body_set_space(const RID &p_body, const RID &p_space) override;
 	virtual Variant _body_get_state(const RID &p_body,

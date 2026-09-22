@@ -18,12 +18,21 @@ endif()
 
 add_subdirectory("${GODOT_CPP_DIR}" godot-cpp EXCLUDE_FROM_ALL)
 
+# MuJoCo is vendored as a subtree under third_party/mujoco (not a manifest entry
+# or submodule): the code is copied in, so the build has no external pin. The
+# physics now runs natively in this extension rather than in a RISC-V sandbox.
+set(MUJOCO_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(MUJOCO_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(MUJOCO_BUILD_SIMULATE OFF CACHE BOOL "" FORCE)
+set(MUJOCO_TEST_PYTHON_UTIL OFF CACHE BOOL "" FORCE)
+add_subdirectory("${CMAKE_SOURCE_DIR}/third_party/mujoco" mujoco EXCLUDE_FROM_ALL)
+
 add_library(godot_mujoco SHARED
   src/mujoco_physics_server.cpp
   src/register_types.cpp
 )
 target_include_directories(godot_mujoco PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_link_libraries(godot_mujoco PRIVATE godot-cpp)
+target_link_libraries(godot_mujoco PRIVATE godot-cpp mujoco)
 
 if(WIN32)
   set(PLATFORM "windows")
