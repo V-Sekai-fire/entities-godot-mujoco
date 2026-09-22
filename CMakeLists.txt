@@ -26,13 +26,20 @@ set(MUJOCO_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(MUJOCO_BUILD_SIMULATE OFF CACHE BOOL "" FORCE)
 set(MUJOCO_TEST_PYTHON_UTIL OFF CACHE BOOL "" FORCE)
 add_subdirectory("${CMAKE_SOURCE_DIR}/third_party/mujoco" mujoco EXCLUDE_FROM_ALL)
+if(WIN32 AND NOT MSVC)
+  target_link_options(mujoco PRIVATE -static)
+endif()
 
 add_library(godot_mujoco SHARED
   src/mujoco_physics_server.cpp
+  src/mujoco_direct_body_state.cpp
   src/register_types.cpp
 )
 target_include_directories(godot_mujoco PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(godot_mujoco PRIVATE godot-cpp mujoco)
+if(WIN32 AND NOT MSVC)
+  target_link_options(godot_mujoco PRIVATE -static)
+endif()
 
 if(WIN32)
   set(PLATFORM "windows")

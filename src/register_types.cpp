@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 #include "register_types.h"
 #include "mujoco_physics_server.h"
+#include "mujoco_direct_body_state.h"
 
 #include <godot_cpp/classes/physics_server3d_manager.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -16,6 +17,7 @@ void initialize_mujoco_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SERVERS) {
 		return;
 	}
+	GDREGISTER_CLASS(MuJoCoDirectBodyState3D);
 	GDREGISTER_CLASS(MuJoCoPhysicsServer);
 	PhysicsServer3DManager *mgr = PhysicsServer3DManager::get_singleton();
 	if (mgr) {
