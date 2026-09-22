@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "entities-godot-mujoco"
+abstract: "MuJoCo physics for Godot as a PhysicsServer3DExtension that delegates stepping to the godot-sandbox RISC-V guest. The bridge invariants are proved in Lean 4 before the C++."
+authors:
+  - name: "V-Sekai-fire"
+  - name: "chibifire"
+license: "Apache-2.0 OR MIT"
+repository-code: "https://github.com/V-Sekai-fire/entities-godot-mujoco"

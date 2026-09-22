@@ -1,0 +1,5 @@
+name = "physicsbridge"
+defaultTargets = ["PhysicsBridge"]
+
+[[lean_lib]]
+name = "PhysicsBridge"

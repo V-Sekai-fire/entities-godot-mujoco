@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  entities-godot-mujoco's own manifest. This repository is a `repo` manifest ROOT.
+
+  It needs one build dependency, godot-cpp, and nothing else does, so it is
+  fetched HERE into thirdparty/ rather than into the workspace manifest. The
+  simulation dependency is not built in: MuJoCo runs as a RISC-V guest under
+  libriscv, driven at runtime through the godot-sandbox Sandbox class, so it is
+  a project dependency of the demo, not a link-time one of this extension.
+
+    repo init -u https://github.com/V-Sekai-fire/entities-godot-mujoco -m default.xml
+    repo sync
+
+  NOT submodules; CLAUDE.md blocklists those. A manifest entry carries the
+  branch, the pin and room for the reason a submodule hash cannot.
+-->
+<manifest>
+  <remote name="v-sekai-fire" fetch="https://github.com/V-Sekai-fire" />
+  <default remote="v-sekai-fire" sync-j="4" />
+
+  <!-- Forked from godotengine/godot-cpp; pinning a fork rather than a `revision`
+       on upstream, which is a promise upstream has not made. Same commit the
+       godot-cineform extension builds against, so the two extensions share one
+       binding tree. -->
+  <project name="godot-cpp" path="thirdparty/godot-cpp"
+           revision="4bc6e67d51df4c12e150fe4769911e239c627a47" />
+</manifest>

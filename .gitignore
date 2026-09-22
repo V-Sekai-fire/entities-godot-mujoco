@@ -1,0 +1,7 @@
+/build/
+/model/.lake/
+/model/build/
+thirdparty/
+__pycache__/
+*.pyc
+*.exe
