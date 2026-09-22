@@ -41,7 +41,7 @@ public:
 	virtual void _init() override;
 	virtual void _finish() override;
 	virtual void _set_active(bool p_active) override;
-	virtual void _step(double p_step) override;
+	virtual void _step(float p_step) override;
 	virtual void _sync() override;
 	virtual void _end_sync() override;
 	virtual void _flush_queries() override;
@@ -63,7 +63,7 @@ public:
 	// --- soft bodies (cloth -> MuJoCo flex) ---
 	virtual RID _soft_body_create() override;
 	virtual Vector3 _soft_body_get_point_global_position(const RID &p_body,
-			int64_t p_point_index) const override;
+			int32_t p_point_index) const override;
 
 	// --- teardown ---
 	virtual void _free_rid(const RID &p_rid) override;

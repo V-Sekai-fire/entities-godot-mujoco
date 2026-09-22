@@ -2,6 +2,7 @@
 #include "mujoco_physics_server.h"
 
 #include <godot_cpp/core/memory.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 using namespace godot;
 
@@ -20,7 +21,7 @@ void MuJoCoPhysicsServer::_set_active(bool p_active) {
 	(void)p_active;
 }
 
-void MuJoCoPhysicsServer::_step(double p_step) {
+void MuJoCoPhysicsServer::_step(float p_step) {
 	// The proven guard: a step is forwarded to the guest only on a compiled
 	// model. If a create or free left the bridge dirty, compile first so the
 	// guest never steps a stale layout (Lean: no_step_after_{create,free},
@@ -51,7 +52,7 @@ RID MuJoCoPhysicsServer::_body_create() {
 	// index the bridge assigns, and never aliases a live one (Lean: fresh_not_live).
 	const mujoco_bridge::Rid rid = bridge.create();
 	model_dirty = true;
-	return RID::from_uint64(rid);
+	return UtilityFunctions::rid_from_int64((int64_t)(rid + 1));
 }
 
 void MuJoCoPhysicsServer::_body_set_space(const RID &p_body, const RID &p_space) { (void)p_body; (void)p_space; }
@@ -69,10 +70,10 @@ void MuJoCoPhysicsServer::_body_set_state(const RID &p_body, PhysicsServer3D::Bo
 RID MuJoCoPhysicsServer::_soft_body_create() {
 	const mujoco_bridge::Rid rid = bridge.create();
 	model_dirty = true;
-	return RID::from_uint64(rid);
+	return UtilityFunctions::rid_from_int64((int64_t)(rid + 1));
 }
 
-Vector3 MuJoCoPhysicsServer::_soft_body_get_point_global_position(const RID &p_body, int64_t p_point_index) const {
+Vector3 MuJoCoPhysicsServer::_soft_body_get_point_global_position(const RID &p_body, int32_t p_point_index) const {
 	(void)p_body; (void)p_point_index;
 	// TODO: read the guest's mjc_flexverts for this soft body's vertex.
 	return Vector3();
@@ -81,6 +82,6 @@ Vector3 MuJoCoPhysicsServer::_soft_body_get_point_global_position(const RID &p_b
 void MuJoCoPhysicsServer::_free_rid(const RID &p_rid) {
 	// A free shifts the dense indices, so it must force a recompile before the
 	// next step (Lean: free_shifts_indices, no_step_after_free).
-	bridge.free(p_rid.get_id());
+	bridge.free((mujoco_bridge::Rid)(p_rid.get_id() - 1));
 	model_dirty = true;
 }
