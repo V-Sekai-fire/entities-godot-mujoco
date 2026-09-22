@@ -10,9 +10,6 @@
 
 using namespace godot;
 
-// PhysicsServer3DManager asks the creator for a server when the project selects
-// "MuJoCo" under physics/3d/physics_engine. Registered at the SERVERS level so it
-// exists before any space is created.
 void initialize_mujoco_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SERVERS) {
 		return;

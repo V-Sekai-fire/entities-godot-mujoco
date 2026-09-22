@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 // A native mirror of model/PhysicsBridge.lean: each check corresponds to a
-// theorem, so the C++ core is verified against the proof rather than assumed.
 #include "mujoco_bridge.h"
 #include <cstdio>
 
@@ -13,7 +12,6 @@ static void check(const char *name, bool ok) {
 }
 
 int main() {
-	// roundtrip_8 + createN_bodies: index i holds RID i, index_of RID i is i.
 	{
 		Reg r;
 		for (int i = 0; i < 8; i++) r.create();
@@ -24,14 +22,12 @@ int main() {
 		}
 		check("roundtrip: index<->rid on 8 bodies", ok);
 	}
-	// create_valid + fresh_not_live: the minted RID is never already live.
 	{
 		Reg r; r.create(); r.create();
 		bool valid = r.valid();
 		Rid next = r.next_rid; size_t idx;
 		check("freshness: valid and next RID not live", valid && !r.index_of(next, idx));
 	}
-	// no_step_after_create / compile_enables_step / step_needs_compiled.
 	{
 		Bridge b;
 		b.create();
@@ -43,7 +39,6 @@ int main() {
 		check("phase: step only when compiled, create/free -> dirty",
 		      after_create && after_compile && after_free);
 	}
-	// free_shifts_indices: free the middle of three, index 1 moves 1 -> 2.
 	{
 		Reg r; r.create(); r.create(); r.create();
 		Rid a; r.rid_at(1, a);
