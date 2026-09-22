@@ -284,8 +284,8 @@ struct gladGLversionStruct mjGLVersion = { 0, 0 };
 #define _GLAD_IS_SOME_NEW_VERSION 1
 #endif
 
-static int mjGlad_max_loaded_major;
-static int mjGlad_max_loaded_minor;
+static int mjGlad_max_loaded_major __attribute__((unused));
+static int mjGlad_max_loaded_minor __attribute__((unused));
 
 static const char *mjGlad_exts = NULL;
 static int mjGlad_num_exts_i = 0;

@@ -5,3 +5,5 @@ thirdparty/
 __pycache__/
 *.pyc
 *.exe
+demo/addons/mujoco/bin/*.dll
+demo/addons/mujoco/bin/*.so
