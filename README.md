@@ -1,12 +1,19 @@
 # entities-godot-mujoco
 
-A Godot physics backend that implements `PhysicsServer3DExtension`, so ordinary
-`RigidBody3D` and `SoftBody3D` nodes get their physics from MuJoCo. MuJoCo is
-vendored as a git subtree under `third_party/mujoco` and linked directly into
-this extension -- `mj_step` runs natively, in-process.
+A physics server extension for the engine that gives ordinary rigid and soft bodies their physics from MuJoCo, stepped natively in-process.
 
-This is migrated from an earlier design that delegated stepping to a RISC-V
-godot-sandbox guest. Native MuJoCo is fast, but native floating point is not
-bit-identical across CPUs, so this backend is not cross-host deterministic. That
-determinism story lives in the sandbox demos (`interactor-taskweft-crowd`,
-`interactor-mujoco-cloth-sim`); this backend trades it for speed.
+## What it is for
+
+Scenes keep their usual body nodes and get MuJoCo's solver underneath. Native floating point is not bit-identical across processors, so this backend trades cross-host determinism for speed. The bridge's invariants are proved in Lean 4 under `model`.
+
+## Build and run
+
+The engine bindings and MuJoCo are vendored, so one script builds the extension into the addon under `demo`.
+
+```sh
+scripts/build.sh
+```
+
+## Licence
+
+Apache-2.0 OR MIT; see LICENSE-APACHE and LICENSE-MIT. Vendored code keeps its own licence.
